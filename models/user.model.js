@@ -27,11 +27,11 @@ async function getOne(email) {
     }
 }
 
-async function changePassword(email, newPassword) {
+async function changePassword(id, newPassword) {
     try {        
         const user = await prisma.user.update({
             where: {
-                email: email
+                id: id
             },
             data: {
                 password: newPassword

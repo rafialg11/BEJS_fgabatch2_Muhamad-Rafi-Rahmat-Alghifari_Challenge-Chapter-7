@@ -10,7 +10,8 @@ async function createUser(email, name, password) {
             email: email,
             name: name,
             password: hashedPassword
-        })                
+        })                        
+
         return user;
     } catch (error) {
         throw error;
@@ -54,12 +55,13 @@ async function resetPassword(email) {
         if (!user) {
             throw new Error('User not found');
         };
+        const userId = user.id;
         //send change password email
         const data = {        
             from: "no-reply@localhost",
             to: email,
             subject: `Reset Password`,
-            text: `Hello ${user.name}, please click on the following link to reset your password: ${process.env.CLIENT_URL}/change-password/${user.email}`,
+            text: `Hello ${user.name}, please click on the following link to reset your password: ${process.env.CLIENT_URL}/users/change-password/${userId}`,
         }
         const response = mailer.transporter.sendMail(data);
         return response;
@@ -68,10 +70,11 @@ async function resetPassword(email) {
     }
 }
 
-async function changePassword(email, newPassword) {
+async function changePassword(id, newPassword) {
     try {
         const hashedPassword = await bcrypt.hash(newPassword, 10);
-        const user = await userModel.changePassword(email, hashedPassword);
+        const user = await userModel.changePassword(id, hashedPassword);        
+
         return user;
     } catch (error) {
         throw error;

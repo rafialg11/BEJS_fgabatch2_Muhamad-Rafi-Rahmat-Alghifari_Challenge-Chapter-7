@@ -1,3 +1,4 @@
+const { io } = require('../bin/www');
 const { user } = require('../config/prisma');
 const userService = require('../services/user.service');
 
@@ -7,7 +8,11 @@ async function createUser(req, res) {
         const createdUser = await userService.createUser(email, name, password);
         res.status(201).json({            
             message: 'User created successfully',
-            data: createdUser
+            data: {
+                id: createdUser.id,
+                email: createdUser.email,
+                name: createdUser.name
+            }
         });
     } catch (error) { 
         console.log(error);
@@ -57,9 +62,9 @@ async function resetPassword(req, res) {
 async function changePassword(req, res) {
     try {
         const {newPassword} = req.body;        
-        const email = req.params.email;
+        const userId = req.params.id;
 
-        if (!email) {
+        if (!userId) {
             return res.status(400).json({
                 status: false, 
                 message: 'email not found' 
@@ -73,7 +78,8 @@ async function changePassword(req, res) {
             });
         };       
         
-        const changePassword = await userService.changePassword(email, newPassword);
+        const changePassword = await userService.changePassword(userId, newPassword);
+        
         res.status(200).json({            
             message: 'User password changed successfully, try to login with new password',        
         })
