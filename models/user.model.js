@@ -27,7 +27,24 @@ async function getOne(email) {
     }
 }
 
+async function changePassword(email, newPassword) {
+    try {        
+        const user = await prisma.user.update({
+            where: {
+                email: email
+            },
+            data: {
+                password: newPassword
+            }
+        })
+        return user;
+    } catch (error) {
+        throw error;
+    }
+}
+
 module.exports = {
     createUser,
-    getOne
+    getOne,
+    changePassword
 }

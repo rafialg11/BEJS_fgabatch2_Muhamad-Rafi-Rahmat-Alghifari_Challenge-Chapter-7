@@ -44,8 +44,38 @@ async function resetPassword(req, res) {
         const {email} = req.body;
         const reset = await userService.resetPassword(email);               
         res.status(200).json({
-            message: 'User password reset successfully, check your email for new password',
-            data: reset
+            message: 'User password reset successfully, check your email for new password',            
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: "Something went wrong, please try again"
+        });
+    }
+}
+
+async function changePassword(req, res) {
+    try {
+        const {newPassword} = req.body;        
+        const email = req.params.email;
+
+        if (!email) {
+            return res.status(400).json({
+                status: false, 
+                message: 'email not found' 
+            });
+        };
+
+        if (!newPassword) {
+            return res.status(400).json({
+                status: false, 
+                message: 'All fields are required' 
+            });
+        };       
+        
+        const changePassword = await userService.changePassword(email, newPassword);
+        res.status(200).json({            
+            message: 'User password changed successfully, try to login with new password',        
         })
     } catch (error) {
         console.log(error);
@@ -58,5 +88,6 @@ async function resetPassword(req, res) {
 module.exports = {
     createUser,
     login,
-    resetPassword
+    resetPassword,
+    changePassword
 }

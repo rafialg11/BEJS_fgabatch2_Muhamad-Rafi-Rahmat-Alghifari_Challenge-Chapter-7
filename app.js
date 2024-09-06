@@ -22,7 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 
 app.get("/debug-sentry", function mainHandler(req, res) {
-    console.log("Hello, world!");
+    console.log("Cek sound");
     throw new Error("My first Sentry error!");
     
 });

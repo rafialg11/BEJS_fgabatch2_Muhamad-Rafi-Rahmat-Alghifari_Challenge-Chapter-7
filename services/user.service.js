@@ -59,7 +59,7 @@ async function resetPassword(email) {
             from: "no-reply@localhost",
             to: email,
             subject: `Reset Password`,
-            text: `Hello ${user.name}, please click on the following link to reset your password: http://localhost:3000/reset-password/${user.email}`,
+            text: `Hello ${user.name}, please click on the following link to reset your password: ${process.env.CLIENT_URL}/change-password/${user.email}`,
         }
         const response = mailer.transporter.sendMail(data);
         return response;
@@ -68,8 +68,19 @@ async function resetPassword(email) {
     }
 }
 
+async function changePassword(email, newPassword) {
+    try {
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        const user = await userModel.changePassword(email, hashedPassword);
+        return user;
+    } catch (error) {
+        throw error;
+    }
+}
+
 module.exports = {
     createUser,  
     login,
-    resetPassword
+    resetPassword,
+    changePassword
 }
