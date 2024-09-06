@@ -1,3 +1,4 @@
+require("./instrument.js");
 const Sentry = require("@sentry/node");
 var express = require('express');
 var path = require('path');
@@ -20,6 +21,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 
+app.get("/debug-sentry", function mainHandler(req, res) {
+    console.log("Hello, world!");
+    throw new Error("My first Sentry error!");
+    
+});
 app.use(function onError(err, req, res, next) {
     // The error id is attached to `res.sentry` to be returned
     // and optionally displayed to the user for support.
